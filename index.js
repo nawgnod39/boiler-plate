@@ -2,15 +2,18 @@ const express =require ("express")
 const app = express()
 const port = 5000
 const bodyParser =require('body-parser');
-
+const cookieParser =require('cookie-parser');
 const config = require('./config/key');
-const {User} = require("./models/User");
-app.use(bodyParser.urlencoded({extended:true}))//바디파서 가 클라이언트에서 오는 정보를  서버에서 분석해서 가져올수있도록해줌  application /w -www-from-urlencoded 로된걸 분석해줌 
 
+const {User} = require("./models/User");
+
+app.use(bodyParser.urlencoded({extended:true}));//바디파서 가 클라이언트에서 오는 정보를  서버에서 분석해서 가져올수있도록해줌  application /w -www-from-urlencoded 로된걸 분석해줌 
 app.use(bodyParser.json());//applicaiton/json
+app.use(cokkieParser());
+
+
 
 const mongoose = require('mongoose')
-
 mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true,useFindAndModify: false
 }).then(()=> console.log('mongodb connected...'))
@@ -54,15 +57,16 @@ User.findOne({email:req.body.email},(err,user) =>{
         //비밀번호 까지 맞다면 토큰 생성하기.
 
         user.generateToken((err,user)=>{
+            if(err) return res.status(400).send(err);
+            //token을 저정한다. 어디에??? 쿠키 로컬스토리지 등등에 저장가능 
+            res.cookie("x_auth",user.token)
+            .status(200)
+            .json({loginSuccess:true, usrId: user._id})
 
-        })
+
+         })
+     })
     })
-
-
-})
-//요청된 이메일이 데이터베이스에 있다면 비밀번호가 맞는지 확인한다.
-//비밀번호가 맞다면 token 생성
-
 })
 
 
