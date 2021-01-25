@@ -1,15 +1,16 @@
 const express =require ("express")
 const app = express()
 const port = 5000
-const bodyParser =require('body-parser');
-const cookieParser =require('cookie-parser');
-const config = require('./config/key');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
+const config = require('./config/key');
+const {auth} = require('./middleware/auth');
 const {User} = require("./models/User");
 
 app.use(bodyParser.urlencoded({extended:true}));//바디파서 가 클라이언트에서 오는 정보를  서버에서 분석해서 가져올수있도록해줌  application /w -www-from-urlencoded 로된걸 분석해줌 
 app.use(bodyParser.json());//applicaiton/json
-app.use(cokkieParser());
+app.use(cookieParser());
 
 
 
@@ -25,7 +26,7 @@ app.get('/',(req,res)=>res.send('hello world'))
 
 
 //register router
-app.post('/register',(req,res)=>{
+app.post('api/users/register',(req,res)=>{
     //회원 가입 할 때 필요한정보 가져오면 그것을 데이터 베이스에 넣어준다.
 
     const user =new User(req.body) 
@@ -39,7 +40,7 @@ app.post('/register',(req,res)=>{
 })
 
 
-app.post('/login',(req, res) =>{
+app.post('api/users/login',(req, res) =>{
 //요청된 이메일을 데이터베이스에서 있는지 찾는다.
 User.findOne({email:req.body.email},(err,user) =>{
     if(!user){
@@ -68,6 +69,13 @@ User.findOne({email:req.body.email},(err,user) =>{
      })
     })
 })
+
+app.get('api/users/auth', auth, (req, res)=>{       
+
+    //auth  middleware 사용 
+    //request 받고 난뒤 콜백function을 실행하기전에  middleware
+})
+//router <-express 에서 제공함 
 
 
 app.listen(port, () => console.log('Example app listening on port ${port}!'))
