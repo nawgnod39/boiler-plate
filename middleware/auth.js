@@ -8,9 +8,17 @@ let auth =(req, res ,next) =>{
 
     //토큰은을 복호화 한후 유저를 찾는다.
 
-    User.findByToken()
+    User.findByToken(token, (err,user)=>{
+        if (err) throw err;
+        if(!user) return res.json({isAuth:false, error :true})
+        req.token = token ;
+        req.user =user;
+        next();//next 가없으면 middleware에 갇힘.
 
-    // 유저가 있으면 인증 OKAY
+
+    })
+
+    // 유저가 있으면 인증 okay
 
 
     //유저가 없으면 인증 NO

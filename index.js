@@ -74,6 +74,18 @@ app.get('api/users/auth', auth, (req, res)=>{
 
     //auth  middleware 사용 
     //request 받고 난뒤 콜백function을 실행하기전에  middleware
+    //여기까지 미들웨어를 통과해 왔다는 에ㅐ기는 authentication 이 true 라는 말.
+    res.status(200).json({
+        _id: req.user._id,
+        //role 이 0 일반유저 , 아니면 관리자 
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.body.user.lastname,
+        role: req.user.role,
+        image:req.user.image
+    })
 })
 //router <-express 에서 제공함 
 
