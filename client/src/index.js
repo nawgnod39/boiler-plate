@@ -1,4 +1,3 @@
-@@ -1,10 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
