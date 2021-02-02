@@ -18,7 +18,7 @@ function LoginPage(props) {
     }
 
     const onSubmitHandler = (event) => {
-        event.preventDefault();
+        event.preventDefault();//리프레쉬 되는걸 막아 줌.
 
         let body = {
             email: Email,
@@ -31,6 +31,7 @@ function LoginPage(props) {
                     props.history.push('/')
                 } else {
                     alert('Error˝')
+                
                 }
             })
 
