@@ -35,5 +35,4 @@ function LandingPage(props) {
         </div>
     )
 }
-export default LandingPage
 export default withRouter(LandingPage)
